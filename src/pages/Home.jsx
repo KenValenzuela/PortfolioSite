@@ -1,6 +1,7 @@
 // src/pages/Home.jsx
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import Spline from "@splinetool/react-spline";
 
 export default function Home() {
   return (
@@ -48,13 +49,8 @@ export default function Home() {
 
       {/* -------------  Placeholder for 3D model ------------- */}
       {/* Replace the gradient box with your Spline component when ready */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8, rotate: 20 }}
-        animate={{ opacity: 1, scale: 1, rotate: 0 }}
-        transition={{ delay: 0.6, duration: 1, type: "spring", stiffness: 70 }}
-        /* keep the absolute box inside the section so it doesn’t shift your text */
-        className="w-full xl:w-1/2 h-96 xl:h-[34rem] bg-gradient-to-br from-purple-600 via-pink-600 to-yellow-500 rounded-3xl shadow-2xl xl:static absolute bottom-0 -right-20 xl:right-0 xl:translate-x-0 translate-x-1/3 opacity-60 xl:opacity-100"
-      />
+                      <Spline className="absolute xl:right-[-28%] right-0 top-[-20%] lg:top-0" scene="https://prod.spline.design/V7UYCIN6FD7eViG1/scene.splinecode" />
+
     </section>
   );
 }

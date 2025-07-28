@@ -7,7 +7,7 @@ const projects = [
     tech: "Streamlit · OpenAI · Supabase · FAISS",
     desc: "Semantic-vector recommender that educates users on terpene profiles and logs personal strain experiences.",
     code: "https://github.com/KenValenzuela/buds-for-brains",
-    live: "#", // replace with production link if deployed
+    live: "https://budsforbrains.streamlit.app/", // replace with production link if deployed
   },
   {
     title: "Toasted Bean Coffee – KPI Dashboard",

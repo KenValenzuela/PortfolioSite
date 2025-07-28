@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import Projects from './pages/Projects';
 import About from './pages/About';
 import Contact from './pages/Contact';
-
+import { Analytics } from "@vercel/analytics/react"
 export default function App() {
   return (
     <Router>
@@ -17,6 +17,7 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
+        <Analytics/>
     </Router>
   );
 }
