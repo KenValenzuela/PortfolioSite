@@ -1,64 +1,67 @@
-import {useRef,useEffect} from "react";
-import {gsap} from "gsap";
+// src/components/CustomCursor.jsx
+import { useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
 
-const CustomCursor =() => {
-    // refs for cursor elements
-    const cursorRef = useRef(null);
-    const cursorBorderRef = useRef(null);
-   //hide cursor on mobile
+export default function CustomCursor() {
+  /* ─── skip on small screens ─── */
+  if (
+    typeof window !== 'undefined' &&
+    window.matchMedia('(max-width: 768px)').matches
+  )
+    return null;
 
-    const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width:768px)").matches
-    if (isMobile){
-        return null
-    }
+  const dotRef    = useRef(null);
+  const ringRef   = useRef(null);
 
-    useEffect(()=> {
-        const cursor = cursorRef.current
-        const cursorBorder = cursorBorderRef.current
+  useEffect(() => {
+    const dot  = dotRef.current;
+    const ring = ringRef.current;
+    if (!dot || !ring) return;
 
-        // initial position off-screen
-        gsap.set([cursor,cursorBorder],{xPercent:-50,yPercent:-50})
-        // Variables for cursor position w/ different speeds
-        const xTo = gsap.quickTo(cursor,"x",{duration:0.2,ease:"power3.out"})
+    /* initial off-screen position */
+    gsap.set([dot, ring], { xPercent: -50, yPercent: -50 });
 
-        const yTo = gsap.quickTo(cursor,"y",{duration:0.2,ease:"power3.out"})
+    /* fast dot, slower ring */
+    const xDot  = gsap.quickTo(dot,  'x', { duration: 0.15, ease: 'power3.out' });
+    const yDot  = gsap.quickTo(dot,  'y', { duration: 0.15, ease: 'power3.out' });
+    const xRing = gsap.quickTo(ring, 'x', { duration: 0.40, ease: 'power3.out' });
+    const yRing = gsap.quickTo(ring, 'y', { duration: 0.40, ease: 'power3.out' });
 
+    const move = ({ clientX, clientY }) => {
+      xDot(clientX);  yDot(clientY);
+      xRing(clientX); yRing(clientY);
+    };
 
-        const xToBorder = gsap.quickTo(cursorBorder,"x",{duration:0.5,ease:"power.out"})
+    const press   = () => gsap.to([dot, ring],  { scale: 0.6, duration: 0.2 });
+    const release = () => gsap.to([dot, ring],  { scale: 1.0, duration: 0.2 });
 
-        const yToBorder = gsap.quickTo(cursorBorder,"y",{duration:0.5,ease:"power.out"})
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mousedown', press);
+    window.addEventListener('mouseup',   release);
 
-        //Mouse move handler
-        const handleMouseMove = (e) => {
-            xTo(e.clientX)
-            yTo(e.clientY)
-            xToBorder(e.clientX)
-            yToBorder(e.clientY)
-        }
-        // add listener
-        window.addEventListener("mousemove",handleMouseMove)
-        // add click animation
-        document.addEventListener("mousedown",()=> {gsap.to([cursor,cursorBorder],{scale:0.6,duration:0.2})})
+    /* cleanup on unmount */
+    return () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mousedown', press);
+      window.removeEventListener('mouseup',   release);
+    };
+  }, []);
 
-        document.addEventListener("mouseup",()=> {gsap.to([cursor,cursorBorder],{scale:1,duration:0.2})})
+  return (
+    <>
+      {/* main cursor dot */}
+      <div
+        ref={dotRef}
+        className="fixed top-0 left-0 w-[12px] h-[12px] bg-white rounded-full
+                   pointer-events-none z-[999] mix-blend-difference"
+      />
 
-    })
-    return(
-        <>
-            {/* main cursor dot*/}
-            <dev
-                ref={cursorRef}
-                className="fixed top-0 left-0 w-[20px] h-[20px] bg-white rounded-full pointer-events-none z-[999]
-                mix-blend-difference">
-            </dev>
-
-            <div
-            ref={cursorBorderRef}
-            className="fixed top-0 left-0 w-[40px] h-[40px] border rounded-full border-white pointer-events-none z-[999] mix-blend-difference opacity-50">
-
-            </div>
-        </>
-        )
-    }
-
-    export default CustomCursor
+      {/* outer ring */}
+      <div
+        ref={ringRef}
+        className="fixed top-0 left-0 w-[32px] h-[32px] border border-white rounded-full
+                   pointer-events-none z-[999] mix-blend-difference opacity-60"
+      />
+    </>
+  );
+}

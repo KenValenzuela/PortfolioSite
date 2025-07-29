@@ -1,23 +1,32 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
-import CustomCursor from './components/CustomCursor';
-import Home from './pages/Home';
-import Projects from './pages/Projects';
-import About from './pages/About';
-import Contact from './pages/Contact';
-import { Analytics } from "@vercel/analytics/react"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Suspense, lazy } from "react";
+import Layout from "./components/Layout";
+import Footer from "./components/Footer";
+
+const Home       = lazy(() => import("./pages/Home"));
+const Projects   = lazy(() => import("./pages/Projects"));
+const About      = lazy(() => import("./pages/About"));
+const Contact    = lazy(() => import("./pages/Contact"));
+const Experience = lazy(() => import("./pages/Experience"));
+
 export default function App() {
   return (
-    <Router>
-      <CustomCursor />
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-      </Routes>
-        <Analytics/>
-    </Router>
+    <BrowserRouter>
+      <Suspense fallback={<div className="h-screen grid place-items-center text-gray-200">Loading…</div>}>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="projects"   element={<Projects />} />
+            <Route path="about"      element={<About />} />
+            <Route path="contact"    element={<Contact />} />
+            <Route path="experience" element={<Experience />} />
+            <Route path="*"          element={<Home />} />
+          </Route>
+        </Routes>
+      </Suspense>
+
+      {/* site‑wide footer */}
+      <Footer />
+    </BrowserRouter>
   );
 }
