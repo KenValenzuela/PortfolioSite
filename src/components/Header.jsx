@@ -37,7 +37,7 @@ export default function Header() {
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true, capture:false });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
   useEffect(() => {

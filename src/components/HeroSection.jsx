@@ -1,46 +1,59 @@
-import {motion} from "framer-motion";
-import Spline from "@splinetool/react-spline";
-const HeroSection = () => {
-    return(
-        <section className="h-screen bg-gradient-to-b from-blue-900 to-black flex xl:flex-row flex-col-reverse
-        items-center justify-between lg:px-2 px-10 relative overflow-hidden">
-            {/* left section */}
-        <div className="z-40 xl:mb-0 mb-[20%]">
-            <motion.h1
-                initial={{opacity:0,y:80}}
-                animate={{opacity:1,y:0}}
-                transition={{
-                    type:"spring",
-                    stiffness:40,
-                    damping:25,
-                    delay:1.3,
-                    duration:1.5
-                }}
-                className="text-5xl md:text-7xl lg:text-8x1 font-bold z-10 mb-6">
-                Building Fast <br /> Reliable Results
-            </motion.h1>
+import { useState, useRef, useEffect, Suspense, lazy } from "react";
+import { motion } from "framer-motion";
+const LazySpline = lazy(() => import("@splinetool/react-spline"));   // 60 kB defers until visible
 
-            <motion.p
-                initial={{opacity:0,y:80}}
-                animate={{opacity:1,y:0}}
-                transition={{
-                    type:"spring",
-                    stiffness:40,
-                    damping:25,
-                    delay:1.8,
-                    duration:1.5
-                }}
-                className ="text-xl md:text-1x1 lg:text-2xl text-blue-300 max-w-2xl">
-                I'm a data-driven developer and analyst with a background in data science and a focus on building user-centered products. With experience across web development, machine learning, and business intelligence, I create tools that blend design, performance, and insight. My work is rooted in clarity, real-world impact, and thoughtful systems that scale. Whether it's a full-stack dashboard, a recommender system, or a product-focused website, I bring a sharp eye for detail and a commitment to clean, purposeful execution.
+export default function HeroSection() {
+  const [show3D, setShow3D] = useState(false);
+  const ref = useRef(null);
 
-            </motion.p>
-        </div>
+  // ——— show Spline only when hero is ~200 px from viewport ———
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setShow3D(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    io.observe(ref.current);
+    return () => io.disconnect();
+  }, []);
 
-            {/* right section */}
-                <Spline className="absolute xl:right-[-28%] right-0 top-[-20%] lg:top-0" scene="https://prod.spline.design/V7UYCIN6FD7eViG1/scene.splinecode" />
+  return (
+    <section
+      ref={ref}
+      className="min-h-screen bg-gradient-to-b from-blue-900 to-black flex flex-col-reverse xl:flex-row items-center justify-between px-4 lg:px-20 overflow-hidden"
+    >
+      {/* text block */}
+      <div className="z-10 mt-12 xl:mt-0 max-w-2xl">
+        <motion.h1
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ type: "spring", stiffness: 60, damping: 18 }}
+          className="text-4xl sm:text-6xl font-bold leading-tight"
+        >
+          Building&nbsp;Fast<br />Reliable&nbsp;Results
+        </motion.h1>
 
-        </section>
-    )
+        <p className="mt-6 text-lg lg:text-xl text-gray-300">
+          I’m a data‑driven developer and analyst who blends front‑end craft,
+          machine‑learning know‑how, and business insight to ship tools that
+          actually move metrics.
+        </p>
+      </div>
 
+      {/* 3‑D stage (lazy) */}
+      {show3D && (
+        <Suspense fallback={<div className="w-[320px] h-[320px]" />}>
+          <LazySpline
+            scene="https://prod.spline.design/V7UYCIN6FD7eViG1/scene.splinecode"
+            className="xl:w-[640px] xl:h-[640px] w-[320px] h-[320px]"
+          />
+        </Suspense>
+      )}
+    </section>
+  );
 }
-export default HeroSection

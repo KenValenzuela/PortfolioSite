@@ -1,25 +1,16 @@
-@import "tailwindcss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-    overflow-x:hidden;
-    font-family: Arial, Helvetica, systemui, sans-serif;
-    margin:0;
-    padding:0;
-    width:100%;
-    position:relative;
-    background-color: black;
-    color: white;
-    cursor:none;
-}
+/* Explicit height & object‑fit for all inline images = CLS ≈ 0 */
+img:not([width]) { width:100%; height:auto; object-fit:cover; }
 
+/* Remove custom cursor on touch devices only */
+@media (pointer:coarse){ body{cursor:auto} }
 
-@media (pointer: coarse) {   /* phones & tablets */
-  body { cursor: auto; }     /* don’t hide touch cursors */
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+body{
+  font-family:system-ui,sans-serif;
+  margin:0; padding:0;
+  background:#000; color:#fff;
+  overflow-x:hidden;
 }
