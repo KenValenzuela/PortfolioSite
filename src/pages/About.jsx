@@ -13,7 +13,7 @@ export default function About() {
   });
 
   const pics = [
-    { src: "/images/lily_and_I.webp", alt: "Ken and Lily after graduation", key: "lily" },
+
     { src: "/images/cats.webp",      alt: "Two very lazy cats",           key: "cats" }
   ];
 
@@ -64,7 +64,7 @@ export default function About() {
           </p>
 
           <p>
-            Off the clock you’ll find me at the gym, grinding World of Warcraft's Solo Shuffle and 3's Arena modes, hanging out with Lily, or trying to reclaim my desk space from my cats, 007 (Left) and Sawdust (Right)
+            Off the clock you’ll find me at the gym, grinding World of Warcraft's Solo Shuffle and 3's Arena modes, or trying to reclaim my desk space from my cats, 007 (Left) and Sawdust (Right)
           </p>
         </motion.div>
 
