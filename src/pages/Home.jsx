@@ -1,10 +1,11 @@
 // src/pages/Home.jsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense, lazy } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { Link } from "react-router-dom";
-import Spline from "@splinetool/react-spline";
+
+const LazySpline = lazy(() => import("@splinetool/react-spline"));
 
 const BLUE       = "#60E7F0";
 const BLUE_HOVER = "#46C9DB";
@@ -108,11 +109,20 @@ export default function Home() {
         </motion.div>
 
         {/* decorative spline ‑‑ hidden on small screens */}
-        <Spline
-          scene="https://prod.spline.design/V7UYCIN6FD7eViG1/scene.splinecode"
-          className="hidden md:block absolute xl:right-[-28%] right-0 top-[-20%] lg:top-0
-                     pointer-events-none select-none z-10 opacity-80"
-        />
+        <Suspense
+          fallback={(
+            <div
+              className="hidden md:block absolute xl:right-[-28%] right-0 top-[-20%] lg:top-0 pointer-events-none select-none z-10"
+              aria-hidden="true"
+            />
+          )}
+        >
+          <LazySpline
+            scene="https://prod.spline.design/V7UYCIN6FD7eViG1/scene.splinecode"
+            className="hidden md:block absolute xl:right-[-28%] right-0 top-[-20%] lg:top-0
+                       pointer-events-none select-none z-10 opacity-80"
+          />
+        </Suspense>
       </section>
 
       {/* ─── About Teaser ─────────────────────────────────── */}

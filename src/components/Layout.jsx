@@ -1,16 +1,19 @@
 // src/components/Layout.jsx
+import { Suspense, lazy } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from './Header';
 import CustomCursor from './CustomCursor';
-import Spline from '@splinetool/react-spline';
 import useLenis from '../hooks/useLenis';
-import useRouteSnap from '../hooks/useRouteSnap'
+import useRouteSnap from '../hooks/useRouteSnap';
+
+const LazySpline = lazy(() => import('@splinetool/react-spline'));
+
 export default function Layout() {
-  useLenis();                       // global smooth‑scroll
-    useRouteSnap()
+  useLenis(); // global smooth-scroll
+  useRouteSnap();
   const { pathname } = useLocation();
-  const showSpline   = pathname === '/';
+  const showSpline = pathname === '/';
 
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-gradient-to-b from-black to-gray-400">
@@ -24,7 +27,11 @@ export default function Layout() {
         transition={{ duration: 0.6, ease: 'easeInOut' }}
         className="absolute xl:right-[-28%] right-0 top-[-20%] lg:top-0 z-10"
       >
-        <Spline scene="https://prod.spline.design/V7UYCIN6FD7eViG1/scene.splinecode" />
+        {showSpline && (
+          <Suspense fallback={null}>
+            <LazySpline scene="https://prod.spline.design/V7UYCIN6FD7eViG1/scene.splinecode" />
+          </Suspense>
+        )}
       </motion.div>
 
       {/* Page transitions */}
