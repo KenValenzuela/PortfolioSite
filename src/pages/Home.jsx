@@ -8,11 +8,11 @@ import { Link } from "react-router-dom";
 const BLUE = "#60E7F0";
 const BLUE_HOVER = "#46C9DB";
 
-/* Lightweight typewriter effect (no external deps) */
+/* Lightweight typewriter effect */
 function useTypewriter(words, speed = 80, pause = 2000) {
   const [wordIdx, setWordIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
-  const [dir, setDir] = useState("fwd"); // fwd | bck
+  const [dir, setDir] = useState("fwd");
   const [txt, setTxt] = useState("");
 
   useEffect(() => {
@@ -50,11 +50,7 @@ export default function Home() {
   const controls = useAnimation();
 
   const headline = useTypewriter(
-    [
-      "Turning data into decisions",
-      "Building fast, reliable results",
-      "Delivering insight at scale",
-    ],
+    ["Turning data into decisions", "Building fast, reliable results", "Delivering insight at scale"],
     80,
     2500
   );
@@ -68,23 +64,36 @@ export default function Home() {
       }
     };
     loop();
-    return () => {
-      mounted = false;
-    };
+    return () => { mounted = false; };
   }, [controls]);
 
   return (
     <main className="overflow-x-hidden font-[Orbitron] bg-gradient-to-b from-black via-[#0a0f1e] to-[#0f172a] text-[#e0f7ff]">
       {/* ─── Hero ─────────────────────────────────────────── */}
-      <section className="min-h-screen flex flex-col xl:flex-row items-center justify-between px-6 sm:px-10 lg:px-24 pt-20 relative z-20 overflow-hidden">
-        {/* headline & cta */}
+      <section
+        className="
+          min-h-screen
+          flex flex-col xl:flex-row
+          items-center
+          justify-center xl:justify-between
+          gap-6 xl:gap-10
+          px-6 sm:px-10 lg:px-20 pt-20
+          relative z-20 overflow-hidden
+        "
+      >
+        {/* Headline & CTA — left on xl */}
         <motion.div
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 80, damping: 15, delay: 0.3 }}
-          className="relative z-20 text-center xl:text-left max-w-xl
-                     bg-black/70 backdrop-blur md:bg-transparent md:backdrop-blur-0
-                     p-4 md:p-0 rounded-lg"
+          transition={{ type: 'spring', stiffness: 80, damping: 15, delay: 0.2 }}
+          className="
+            order-0
+            relative z-20
+            text-center xl:text-left
+            max-w-xl
+            bg-black/70 backdrop-blur md:bg-transparent md:backdrop-blur-0
+            p-4 md:p-0 rounded-lg
+          "
         >
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold leading-tight drop-shadow-[0_0_15px_#60E7F0]">
             <span className="text-[#60E7F0]">{headline}</span>
@@ -92,8 +101,7 @@ export default function Home() {
           </h1>
 
           <p className="mt-6 text-base sm:text-lg lg:text-xl text-gray-300">
-            End-to-end dashboards, ML apps & immersive web experiences that turn
-            raw data into decisive action.
+            End-to-end dashboards, ML apps & immersive web experiences that turn raw data into decisive action.
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center xl:justify-start">
@@ -101,40 +109,45 @@ export default function Home() {
               to="/projects"
               className="px-6 py-3 rounded-lg font-semibold text-black transition"
               style={{ backgroundColor: BLUE }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = BLUE_HOVER)
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = BLUE)
-              }
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = BLUE_HOVER)}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = BLUE)}
             >
               View Projects
             </Link>
           </div>
         </motion.div>
 
-        {/* Decorative orb instead of Spline (keeps CSP happy) */}
+        {/* Orb — slightly larger and shifted left */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8, rotate: -8 }}
+          initial={{ opacity: 0, scale: 0.95, rotate: -6 }}
           whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
           viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          className="hidden md:flex absolute xl:right-[-28%] right-0 top-[-20%] lg:top-0
-                     pointer-events-none select-none z-10 opacity-80 w-[480px] h-[480px]
-                     items-center justify-center"
+          transition={{ duration: 1.0, ease: 'easeOut' }}
+          className="
+            order-1
+            w-[75vw] sm:w-[460px] md:w-[580px] lg:w-[660px] xl:w-[740px]
+            aspect-square
+            pointer-events-none select-none opacity-90
+            relative
+            flex items-center justify-center
+            xl:-ml-10 lg:-ml-8 md:-ml-6
+          "
           aria-hidden="true"
         >
           <motion.div
             animate={{ rotate: [0, 10, -6, 0], scale: [1, 1.05, 0.97, 1] }}
-            transition={{ repeat: Infinity, duration: 14, ease: "easeInOut" }}
-            className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_25%,rgba(96,231,240,0.5),transparent_65%),radial-gradient(circle_at_70%_70%,rgba(46,122,255,0.45),transparent_60%)] blur-3xl"
+            transition={{ repeat: Infinity, duration: 14, ease: 'easeInOut' }}
+            className="
+              absolute inset-0 rounded-full blur-3xl
+              bg-[radial-gradient(circle_at_30%_25%,rgba(96,231,240,0.5),transparent_65%),radial-gradient(circle_at_70%_70%,rgba(46,122,255,0.45),transparent_60%)]
+            "
           />
           <motion.img
             src="/kv_logo.webp"
             alt="Ken Valenzuela logo"
             className="relative w-full h-full object-contain"
             animate={{ y: [0, -18, 0, 12, 0] }}
-            transition={{ repeat: Infinity, duration: 12, ease: "easeInOut" }}
+            transition={{ repeat: Infinity, duration: 12, ease: 'easeInOut' }}
             fetchPriority="high"
             loading="eager"
           />
@@ -158,30 +171,22 @@ export default function Home() {
             </h2>
 
             <p className="text-base sm:text-lg text-gray-300 max-w-lg leading-relaxed">
-              Hi, I’m Ken. I blend data science, product design and ML
-              engineering to build tools that deliver clear, measurable impact.
+              Hi, I’m Ken. I blend data science, product design and ML engineering to build tools that deliver clear, measurable impact.
             </p>
 
             <Link
               to="/about"
               className="inline-block mt-4 px-6 py-3 rounded-lg font-semibold text-black transition"
               style={{ backgroundColor: BLUE }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = BLUE_HOVER)
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = BLUE)
-              }
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = BLUE_HOVER)}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = BLUE)}
             >
               Learn More →
             </Link>
           </motion.div>
 
           {/* looping video preview */}
-          <motion.div
-            animate={controls}
-            className="w-full max-w-md mx-auto rounded-xl overflow-hidden shadow-[0_0_25px_#60E7F0]"
-          >
+          <motion.div animate={controls} className="w-full max-w-md mx-auto rounded-xl overflow-hidden shadow-[0_0_25px_#60E7F0]">
             <video
               src="/ken_video.mp4"
               autoPlay
