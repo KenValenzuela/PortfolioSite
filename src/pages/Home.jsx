@@ -4,22 +4,19 @@
 import { useState, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { Link } from "react-router-dom";
-import Spline from "@splinetool/react-spline";
 
-const BLUE       = "#60E7F0";
+const BLUE = "#60E7F0";
 const BLUE_HOVER = "#46C9DB";
 
-/* ─────────────────────────────────────────────────────────
-   Lightweight typewriter effect (no external deps)
-   ───────────────────────────────────────────────────────── */
+/* Lightweight typewriter effect (no external deps) */
 function useTypewriter(words, speed = 80, pause = 2000) {
   const [wordIdx, setWordIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
-  const [dir, setDir]         = useState("fwd"); // fwd | bck
-  const [txt, setTxt]         = useState("");
+  const [dir, setDir] = useState("fwd"); // fwd | bck
+  const [txt, setTxt] = useState("");
 
   useEffect(() => {
-    const cur   = words[wordIdx];
+    const cur = words[wordIdx];
     let timer;
 
     if (dir === "fwd") {
@@ -50,37 +47,41 @@ function useTypewriter(words, speed = 80, pause = 2000) {
 }
 
 export default function Home() {
-  /* looping opacity on video frame */
   const controls = useAnimation();
 
-  /* hero headline phrases */
   const headline = useTypewriter(
-    ["Turning data into decisions", "Building fast, reliable results", "Delivering insight at scale"],
+    [
+      "Turning data into decisions",
+      "Building fast, reliable results",
+      "Delivering insight at scale",
+    ],
     80,
     2500
   );
 
   useEffect(() => {
+    let mounted = true;
     const loop = async () => {
-      while (true) {
+      while (mounted) {
         await controls.start({ opacity: 0.3, transition: { duration: 2 } });
-        await controls.start({ opacity: 1,   transition: { duration: 2 } });
+        await controls.start({ opacity: 1, transition: { duration: 2 } });
       }
     };
     loop();
+    return () => {
+      mounted = false;
+    };
   }, [controls]);
 
   return (
     <main className="overflow-x-hidden font-[Orbitron] bg-gradient-to-b from-black via-[#0a0f1e] to-[#0f172a] text-[#e0f7ff]">
       {/* ─── Hero ─────────────────────────────────────────── */}
       <section className="min-h-screen flex flex-col xl:flex-row items-center justify-between px-6 sm:px-10 lg:px-24 pt-20 relative z-20 overflow-hidden">
-
         {/* headline & cta */}
         <motion.div
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 80, damping: 15, delay: 0.3 }}
-          /* small‑screen backdrop for readability */
           className="relative z-20 text-center xl:text-left max-w-xl
                      bg-black/70 backdrop-blur md:bg-transparent md:backdrop-blur-0
                      p-4 md:p-0 rounded-lg"
@@ -91,7 +92,8 @@ export default function Home() {
           </h1>
 
           <p className="mt-6 text-base sm:text-lg lg:text-xl text-gray-300">
-            End‑to‑end dashboards, ML apps & immersive web experiences that turn raw data into decisive action.
+            End-to-end dashboards, ML apps & immersive web experiences that turn
+            raw data into decisive action.
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center xl:justify-start">
@@ -99,27 +101,50 @@ export default function Home() {
               to="/projects"
               className="px-6 py-3 rounded-lg font-semibold text-black transition"
               style={{ backgroundColor: BLUE }}
-              onMouseEnter={e => (e.currentTarget.style.backgroundColor = BLUE_HOVER)}
-              onMouseLeave={e => (e.currentTarget.style.backgroundColor = BLUE)}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = BLUE_HOVER)
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = BLUE)
+              }
             >
               View Projects
             </Link>
           </div>
         </motion.div>
 
-        {/* decorative spline ‑‑ hidden on small screens */}
-        <Spline
-          scene="https://prod.spline.design/V7UYCIN6FD7eViG1/scene.splinecode"
-          className="hidden md:block absolute xl:right-[-28%] right-0 top-[-20%] lg:top-0
-                     pointer-events-none select-none z-10 opacity-80"
-        />
+        {/* Decorative orb instead of Spline (keeps CSP happy) */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8, rotate: -8 }}
+          whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          className="hidden md:flex absolute xl:right-[-28%] right-0 top-[-20%] lg:top-0
+                     pointer-events-none select-none z-10 opacity-80 w-[480px] h-[480px]
+                     items-center justify-center"
+          aria-hidden="true"
+        >
+          <motion.div
+            animate={{ rotate: [0, 10, -6, 0], scale: [1, 1.05, 0.97, 1] }}
+            transition={{ repeat: Infinity, duration: 14, ease: "easeInOut" }}
+            className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_25%,rgba(96,231,240,0.5),transparent_65%),radial-gradient(circle_at_70%_70%,rgba(46,122,255,0.45),transparent_60%)] blur-3xl"
+          />
+          <motion.img
+            src="/kv_logo.webp"
+            alt="Ken Valenzuela logo"
+            className="relative w-full h-full object-contain"
+            animate={{ y: [0, -18, 0, 12, 0] }}
+            transition={{ repeat: Infinity, duration: 12, ease: "easeInOut" }}
+            fetchPriority="high"
+            loading="eager"
+          />
+        </motion.div>
       </section>
 
-      {/* ─── About Teaser ─────────────────────────────────── */}
+      {/* ─── About Teaser ─────────────────────────────────── */}
       <section className="relative w-full bg-[#0f172a] py-24 px-6 sm:px-12 md:px-20 text-[#e0f7ff] z-30">
         <div className="absolute inset-0 bg-[#0f172a] opacity-95 z-10" />
         <div className="relative z-20 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-
           {/* teaser text */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -133,15 +158,20 @@ export default function Home() {
             </h2>
 
             <p className="text-base sm:text-lg text-gray-300 max-w-lg leading-relaxed">
-              Hi, I’m Ken. I blend data science, product design and ML engineering to build tools that deliver clear, measurable impact.
+              Hi, I’m Ken. I blend data science, product design and ML
+              engineering to build tools that deliver clear, measurable impact.
             </p>
 
             <Link
               to="/about"
               className="inline-block mt-4 px-6 py-3 rounded-lg font-semibold text-black transition"
               style={{ backgroundColor: BLUE }}
-              onMouseEnter={e => (e.currentTarget.style.backgroundColor = BLUE_HOVER)}
-              onMouseLeave={e => (e.currentTarget.style.backgroundColor = BLUE)}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = BLUE_HOVER)
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.backgroundColor = BLUE)
+              }
             >
               Learn More →
             </Link>
